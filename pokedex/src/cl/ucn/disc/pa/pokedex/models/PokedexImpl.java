@@ -8,14 +8,21 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-
+/**
+ * La clase PokedexImpl implementa la interfaz Pokedex y representa una aplicación de Pokédex.
+ * Esta clase se encarga de la gestión de los Pokemones y proporciona métodos para interactuar
+ * con la Pokédex.
+ */
 public class PokedexImpl implements Pokedex {
 
     private ListaNodoNexoDoble listaPokemons;
     private ArrayList<NodoNexoDoble> contenedor;
     private LinkedList<Pokemon> linkedList;
 
-
+    /**
+     * Crea una nueva instancia de PokedexImpl.
+     * Inicializa los atributos listaPokemons, contenedor y linkedList.
+     */
     public PokedexImpl(){
         this.listaPokemons= new ListaNodoNexoDoble();
         this.contenedor= new ArrayList<>();
@@ -23,6 +30,7 @@ public class PokedexImpl implements Pokedex {
 
 
     }
+
 
     @Override
     public void lecturaArchivo() {
@@ -33,28 +41,63 @@ public class PokedexImpl implements Pokedex {
                 String linea = scanner.nextLine().trim();
                 if (!linea.isEmpty()) {
                     String[] datos = linea.split(",");
+                    int id;
+                    String nombre;
+                    String etapa;
+                    String evolucion1;
+                    String evolucion2;
+                    String evolucion3;
+                    String evolucionAnterior;
+                    String tipo1;
+                    String tipo2;
 
-                    if (datos.length != 7){
-                        continue;
+                    if (datos.length == 7){
+                        id = Integer.parseInt(datos[0].trim());
+                        nombre = datos[1].trim();
+                        etapa = datos[2].trim();
+                        evolucion1 = datos[3].trim();
+                        evolucionAnterior = datos[4].trim();
+                        tipo1 = datos[5].trim();
+                        tipo2 = datos[6].trim();
+                        Pokemon pokemon = new Pokemon(id, nombre, etapa, evolucion1, evolucionAnterior, tipo1, tipo2);
+                        listaPokemons.insertar(pokemon);
                     }
-                    if (datos[1].toLowerCase().trim().equals("eevee")){
-                        /**Pokemon eevee = new Pokemon( int id = Integer.parseInt(datos[0]),"Eevee",
-                                String etap = datos[2],"Flareon","Vaporeon","Jolteon","normal","normal");*/
-                        System.out.println("soy un eevee");
-                        continue;
+                    else if (datos.length==8){
+                        id = Integer.parseInt(datos[0].trim());
+                        nombre = datos[1].trim();
+                        etapa = datos[2].trim();
+                        evolucion1 = datos[3].trim();
+                        evolucion2 = datos[4].trim();
+                        evolucion3 = datos[5].trim();
+                        tipo1 = datos[6].trim();
+                        tipo2 = datos[7].trim();
+                        Pokemon pokemon = new Pokemon(id,nombre,etapa,evolucion1,evolucion2,evolucion3,tipo1,tipo2);
+                        listaPokemons.insertar(pokemon);
                     }
-                    String idLetra = datos[0].trim();
+                    else if (datos.length==5){
+                        id = Integer.parseInt(datos[0].trim());
+                        nombre = datos[1].trim();
+                        etapa = datos[2].trim();
+                        tipo1 = datos[3].trim();
+                        tipo2 = datos[4].trim();
+                        Pokemon pokemon = new Pokemon(id,nombre,etapa,tipo1,tipo2);
+                        listaPokemons.insertar(pokemon);
+                    }
+                    else if (datos.length==6){
+                        id = Integer.parseInt(datos[0].trim());
+                        nombre = datos[1].trim();
+                        etapa = datos[2].trim();
+                        evolucion1 = datos[3].trim();
+                        tipo1 = datos[4].trim();
+                        tipo2 = datos[5].trim();
+                        Pokemon pokemon = new Pokemon(id,nombre,etapa,evolucion1,tipo1,tipo2);
+                        listaPokemons.insertar(pokemon);
 
-                    int id = Integer.parseInt(idLetra);
-                    String nombre = datos[1].trim();
-                    String etapa = datos[2].trim();
-                    String primeraEvolucion = datos[3].trim();
-                    String segundaEvolucion = datos[4].trim();
-                    String tipo1 = datos[5].trim();
-                    String tipo2 = datos[6].trim();
+                    }
 
-                    Pokemon pokemon = new Pokemon(id, nombre, etapa, primeraEvolucion, segundaEvolucion, tipo1, tipo2);
-                    listaPokemons.insertar(pokemon);
+
+
+
                 }
             }
             scanner.close();
@@ -113,7 +156,10 @@ public class PokedexImpl implements Pokedex {
             }
         } while (!opcion.equals("6"));
     }
-
+    /**
+     * Busca un Pokémon por su ID y muestra su información si se encuentra en la Pokédex.
+     * @param id El ID del Pokémon a buscar.
+     */
     private void buscarPokemon(int id) {
         if (listaPokemons.buscarPokemon(id)){
 
@@ -123,19 +169,42 @@ public class PokedexImpl implements Pokedex {
         }
 
     }
-
+    /**
+     * Muestra todos los Pokemones de primera evolución ordenados por su ID en orden decreciente.
+     */
     private void mostrarPokemonesPrimeraEvolucion() {
-        listaPokemons.mostrar();
+        ordenarId(listaPokemons);
+        this.contenedor = listaPokemons.buscarPorPrimeraEvolucion();
+        for (int i = contenedor.size()-1;i>-1;i--){
+            System.out.println(contenedor.get(i).getPokemon().toString());
+        }
     }
-
+    /**
+     * Muestra los Pokemones de un tipo específico.
+     * @param tipo El tipo del Pokémon a mostrar.
+     */
     private void mostrarPokemonesTipo(String tipo) {
-    }
+        if (listaPokemons.buscarPorTipo(tipo)!= null){
+            this.linkedList = listaPokemons.buscarPorTipo(tipo);
+            for(Pokemon pokemon : linkedList){
+                System.out.println(pokemon.toString());
+            }
+        }
+        System.out.println("algo salio mal, vuelva a intentarlo.");
 
+    }
+    /**
+     * Muestra todos los Pokemones ordenados alfabéticamente.
+     */
     private void mostrarPokemonesAlfabeticamente() {
         listaPokemons.ordenarAlfabeticamente();
         listaPokemons.mostrar();
     }
-
+    /**
+     * Muestra los Pokemones en un rango de números dado.
+     * @param rangoInicio El número inicial del rango.
+     * @param rangoFin El número final del rango.
+     */
     public void mostrarPokemonesRango(int rangoInicio, int rangoFin) {
 
         ordenarId(listaPokemons);
@@ -148,6 +217,10 @@ public class PokedexImpl implements Pokedex {
     }
 
     //metodo creado basado en bubblesort
+    /**
+     * Ordena la lista de Pokemones por su ID en orden ascendente.
+     * @param lista La lista de Pokemones a ordenar.
+     */
     public void ordenarId(ListaNodoNexoDoble lista) {
 
         if (lista.isVacia()) {
@@ -176,6 +249,12 @@ public class PokedexImpl implements Pokedex {
         } while (intercambioRealizado);
     }
     //metodo para facilitar el cambio de nodos
+    /**
+     * Cambia la posición de dos nodos en la lista.
+     * @param lista La lista en la que se encuentran los nodos.
+     * @param nodo1 El primer nodo a intercambiar.
+     * @param nodo2 El segundo nodo a intercambiar.
+     */
     private void cambiarNodos(ListaNodoNexoDoble lista, NodoNexoDoble nodo1, NodoNexoDoble nodo2) {
 
         NodoNexoDoble anteriorNodo1 = nodo1.getPrevio();

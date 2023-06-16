@@ -1,0 +1,24 @@
+@startuml
+entity Pokedex{
+    mostrar por tipo
+    mostrar alfabeticamente
+    mostrar por rango
+    buscar primera evolucione
+    busqueda personalizada
+    salir
+
+}
+entity Pokemon{
+    id
+    nombre
+    etapa
+    evolucion Siguiente
+    evolucion Siguiente
+    evolucion Siguiente
+    evolucion Anterior
+    primer tipo
+    segundo tipo
+
+}
+Pokedex --> Pokemon : contiene informacion \n de los pokemons
+@enduml

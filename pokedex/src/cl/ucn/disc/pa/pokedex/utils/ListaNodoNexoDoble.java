@@ -1,15 +1,22 @@
 package cl.ucn.disc.pa.pokedex.utils;
-import cl.ucn.disc.pa.pokedex.services.ListaCircular;
+import cl.ucn.disc.pa.pokedex.services.ListaNexoDoble;
 import cl.ucn.disc.pa.pokedex.models.Pokemon;
 import cl.ucn.disc.pa.pokedex.services.NodoNexoDoble;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
-
-public class ListaNodoNexoDoble implements ListaCircular {
+/**
+ * La clase ListaNodoNexoDoble implementa la interfaz ListaNexoDoble y representa
+ * una lista con nexo doble de Pokemones.
+ */
+public class ListaNodoNexoDoble implements ListaNexoDoble {
     private NodoNexoDoble head;
     private NodoNexoDoble tail;
-
+    /**
+     * Crea una nueva instancia de ListaNodoNexoDoble.
+     * Inicializa los atributos head y tail como null.
+     */
     public ListaNodoNexoDoble() {
         this.head = null;
         this.tail = null;
@@ -22,8 +29,8 @@ public class ListaNodoNexoDoble implements ListaCircular {
         if (this.head == null) {
             this.head = nuevoNodo;
             this.tail = nuevoNodo;
-            head.setSiguiente(tail);
-            tail.setPrevio(head);
+            head.setSiguiente(null);
+            tail.setPrevio(null);
         }
         head.setPrevio(null);
         tail.setSiguiente(null);
@@ -33,7 +40,7 @@ public class ListaNodoNexoDoble implements ListaCircular {
         }
         aux.setSiguiente(nuevoNodo);
         nuevoNodo.setPrevio(aux);
-        this.tail = nuevoNodo;
+        setTail(nuevoNodo);
 
 
     }
@@ -48,35 +55,44 @@ public class ListaNodoNexoDoble implements ListaCircular {
     @Override
     public void ordenarAlfabeticamente(){
         if (isVacia()){
-            System.out.println("la lista esta vaica.");
             return;
         }
-
-        NodoNexoDoble actual = this.head;
-        System.out.println(tail.getPokemon().getNombre());
-        do {
-            NodoNexoDoble siguiente = actual.getSiguiente();
-
-            while (siguiente != null) {
-                if (actual.getPokemon().getNombre().compareToIgnoreCase(siguiente.getPokemon().getNombre()) > 0) {
-                    // Intercambiar los datos
-                    NodoNexoDoble temp = actual;
-                    actual=siguiente;
-                    siguiente=temp;
-                }
-
-                siguiente = siguiente.getSiguiente();
+        NodoNexoDoble aux = this.head;
+        while(aux.getSiguiente()!=null){
+            Pokemon aux1;
+            Pokemon aux2;
+            if (aux.getPokemon().getNombre().toLowerCase().compareTo(aux.getSiguiente().getPokemon().getNombre().toLowerCase()) > 0) {
+                aux1 = aux.getPokemon();
+                aux2 = aux.getSiguiente().getPokemon();
+                aux.setPokemon(aux2);
+                aux.getSiguiente().setPokemon(aux1);
             }
-
-            actual = actual.getSiguiente();
-        } while (actual != null);
+            aux = aux.getSiguiente();
+        }
     }
+    @Override
+    public LinkedList<Pokemon> buscarPorTipo(String tipo ){
 
+        LinkedList<Pokemon> ordenadosPorTipo = new LinkedList<>();
+        if (isVacia()){
+            return null;
+        }
+        NodoNexoDoble aux = this.head;
+        while (aux.getSiguiente() !=null){
+
+            if (aux.getPokemon().getTipoUno().equalsIgnoreCase(tipo) || aux.getPokemon().getTipoDos().equalsIgnoreCase(tipo)){
+                ordenadosPorTipo.add(aux.getPokemon());
+            }
+            aux = aux.getSiguiente();
+        }
+
+        return ordenadosPorTipo;
+    }
+    @Override
     public ArrayList<NodoNexoDoble> buscarEnUnRango(int inicio, int fin){
 
         ArrayList<NodoNexoDoble> rango = new ArrayList<>();
         if(isVacia()){
-            System.out.println("la lista esta vaica.");
             return null;
         }
         NodoNexoDoble aux = this.head;
@@ -88,6 +104,7 @@ public class ListaNodoNexoDoble implements ListaCircular {
         }
         return rango;
     }
+    @Override
     public boolean buscarPokemon(int id){
 
         if (isVacia()){
@@ -109,7 +126,22 @@ public class ListaNodoNexoDoble implements ListaCircular {
         }
         return false;
     }
-
+    @Override
+    public ArrayList<NodoNexoDoble> buscarPorPrimeraEvolucion(){
+        ArrayList<NodoNexoDoble> listaPrimeraEvolucion = new ArrayList<>();
+        if (isVacia()){
+            return null;
+        }
+        NodoNexoDoble aux = this.head;
+        while (aux.getSiguiente()!=null){
+            if (aux.getPokemon().getEtapa().equalsIgnoreCase("primera Evolucion")){
+                listaPrimeraEvolucion.add(aux);
+            }
+            aux = aux.getSiguiente();
+        }
+        return listaPrimeraEvolucion;
+    }
+    @Override
     public Pokemon obtenerPokemon(int id){
 
         NodoNexoDoble aux = this.head;
@@ -122,6 +154,7 @@ public class ListaNodoNexoDoble implements ListaCircular {
         return null;
     }
 
+    //gets y setters de la clase
     public NodoNexoDoble getHead() {
         return head;
     }

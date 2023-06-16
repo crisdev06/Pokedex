@@ -1,0 +1,98 @@
+@startuml
+
+
+package cl,ucn,disc,pa,pokedex{
+    package models{
+        class PokedexImpl{
+
+            -listaPokemons: ListaNexoDoble
+            -contenedor: ArrayList<NodoNexoDoble>
+            -linkedList: LinkedList<Pokemon>
+            + PokedexImpl()
+            +lecturaArchivo()
+            +menu()
+            +buscarPokemon(int id):void
+            +mostrarPokemonesPrimeraEvolucion():void
+            +mostrarPokemonesTipo():void
+            +mostrarPokemonesAlfabeticamente():void
+            +mostrarPokemonesRango(int rangoInicio, int ranigoFin):void
+            +ordenarId(ListaNodoNexoDoble lista):void
+            -cambiarNodos(ListaNodoNexoDoble lista), NodoNexoDoble nodo1,NodoNexoDoble nodo2):void
+
+        }
+        class Pokemon{
+
+            -id: int
+            -nombre:String
+            -etapa:String
+            -evolucionSiguienteUno:String
+            -evolucionSiguienteDos:String
+            -evolucionSiguienteTres:String
+            -evolucionAnterior:String
+            -tipoUno:String
+            -tipoDos:String
+            +Pokemon(int id, String nombre, String etapa, String evolucionSiguienteUno, String evolucionAnterior,
+             String tipoUno, String tipoDos)
+            +Pokemon(int id, String nombre, String etapa, String evolucionSiguienteUno, String evolucionSiguienteDos,
+                                        String evolucionSiguienteTres, String tipoUno, String tipoDos)
+            +Pokemon(int id, String nombre, String etapa, String tipoUno, String tipoDos)
+            +Pokemon(int id, String nombre, String etapa, String evolucionSiguienteUno,
+             String tipoUno, String tipoDos)
+            +get`s()
+            +set`s()
+        }
+    }
+    package services{
+        Interface ListaNexoDoble{
+
+            +insertar(Pokemon pokemon):void
+            +mostrar():void
+            +ordenarAlfabeticamente():void
+            +buscarPorTipo(String tipo):LinkedList<Pokemon>
+            +buscarEnUnRango(int inicio, int fin):ArrayList<NodoNexoDoble>
+            +buscarPokemon(int id):boolean
+            +buscarPorPrimeraEvolucion():ArrayList<NodoNexoDoble>
+            +obtenerPokemon(int id):Pokemon
+        }
+        class NodoNexoDoble{
+            -pokemon:Pokemon
+            +NodoNexoDoble()
+            +get`s()
+            +set`s()
+
+        }
+
+        Interface Pokedex{
+
+            +lecturaArchivo()
+            +menu()
+        }
+    }
+    package utils{
+        class ListaNodoNexoDobleImpl{
+           +ListaNodoNexoDoble()
+           +insertar(Pokemon pokemon):void
+           +mostrar():void
+           +ordenarAlfabeticamente():void
+           +buscarPorTipo(String tipo):LinkedList<Pokemon>
+           +buscarEnUnRango(int inicio, int fin):ArrayList<NodoNexoDoble>
+           +buscarPokemon(int id):boolean
+           +buscarPorPrimeraEvolucion():ArrayList<NodoNexoDoble>
+           +obtenerPokemon(int id):Pokemon
+           +isVacia():boolean
+           +get`s()
+           +set`s()
+        }
+        class Main{}
+    }
+
+}
+Main -- PokedexImpl : ejecuta
+ListaNodoNexoDobleImpl ..|> ListaNexoDoble : <<implements>>
+PokedexImpl ..|> Pokedex : <<implements>>
+ListaNodoNexoDobleImpl "1" *--|> "                  *" NodoNexoDoble : -head \n tail
+NodoNexoDoble o--> NodoNexoDoble: -Siguiente
+NodoNexoDoble <--o NodoNexoDoble: -previo
+NodoNexoDoble -- Pokemon : contiene
+PokedexImpl --> ListaNodoNexoDobleImpl : <<uses>>
+@enduml
