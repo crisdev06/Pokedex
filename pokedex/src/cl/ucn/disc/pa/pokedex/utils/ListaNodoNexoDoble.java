@@ -21,6 +21,7 @@ public class ListaNodoNexoDoble implements ListaNexoDoble {
         this.head = null;
         this.tail = null;
 
+
     }
     @Override
     public void insertar(Pokemon pokemon) {
@@ -32,8 +33,11 @@ public class ListaNodoNexoDoble implements ListaNexoDoble {
             head.setSiguiente(null);
             tail.setPrevio(null);
         }
+        //si la lista no esta vacia
+
         head.setPrevio(null);
         tail.setSiguiente(null);
+
         NodoNexoDoble aux = this.head;
         while(aux.getSiguiente() != null){
             aux = aux.getSiguiente();
@@ -57,18 +61,21 @@ public class ListaNodoNexoDoble implements ListaNexoDoble {
         if (isVacia()){
             return;
         }
-        NodoNexoDoble aux = this.head;
-        while(aux.getSiguiente()!=null){
-            Pokemon aux1;
-            Pokemon aux2;
-            if (aux.getPokemon().getNombre().toLowerCase().compareTo(aux.getSiguiente().getPokemon().getNombre().toLowerCase()) > 0) {
-                aux1 = aux.getPokemon();
-                aux2 = aux.getSiguiente().getPokemon();
-                aux.setPokemon(aux2);
-                aux.getSiguiente().setPokemon(aux1);
+        boolean cambio = true;
+        while (cambio){
+            int iteracion = 0;
+            cambio= false;
+            for ( NodoNexoDoble aux = this.head;aux.getSiguiente() != null; aux=aux.getSiguiente()){
+                if (aux.getPokemon().getNombre().toLowerCase().compareTo(aux.getSiguiente().getPokemon().getNombre().toLowerCase()) > 0){
+                    Pokemon aux1 = aux.getPokemon();
+                    Pokemon aux2 = aux.getSiguiente().getPokemon();
+                    aux.setPokemon(aux2);
+                    aux.getSiguiente().setPokemon(aux1);
+                    cambio= true;
+                }
             }
-            aux = aux.getSiguiente();
         }
+
     }
     @Override
     public LinkedList<Pokemon> buscarPorTipo(String tipo ){
@@ -108,12 +115,24 @@ public class ListaNodoNexoDoble implements ListaNexoDoble {
     public boolean buscarPokemon(int id){
 
         if (isVacia()){
-            System.out.println("la lista esta vacia.");
             return false;
         }
         NodoNexoDoble aux = this.head;
         while(aux.getSiguiente() != null){
             if (aux.getPokemon().getId()==id){
+                return true;
+            }
+            aux = aux.getSiguiente();
+        }
+        return false;
+    }
+    public boolean buscarPokemonNombre(String nombre){
+        if (isVacia()){
+            return false;
+        }
+        NodoNexoDoble aux = this.head;
+        while (aux.getSiguiente() != null){
+            if (aux.getPokemon().getNombre().equalsIgnoreCase(nombre)){
                 return true;
             }
             aux = aux.getSiguiente();
@@ -153,6 +172,24 @@ public class ListaNodoNexoDoble implements ListaNexoDoble {
         }
         return null;
     }
+
+    /**
+     * Verifica si un Pokemon con el Nombre especificado existe en la lista.
+     *
+     * @param nombre el Nombre del Pokemon a buscar.
+     * @return true si se encuentra el Pokemon, false en caso contrario.
+     */
+    public Pokemon obtenerPokemonNombre(String nombre){
+        NodoNexoDoble aux = this.head;
+        while (aux.getSiguiente()!= null){
+            if (aux.getPokemon().getNombre().equalsIgnoreCase(nombre)){
+                return aux.getPokemon();
+            }
+            aux=aux.getSiguiente();
+        }
+        return null;
+    }
+
 
     //gets y setters de la clase
     public NodoNexoDoble getHead() {

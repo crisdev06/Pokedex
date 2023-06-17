@@ -156,4 +156,5 @@ public class Pokemon {
                 ", tipodos='" + tipoDos + '\'' +
                 '}';
     }
+
 }

@@ -24,11 +24,10 @@ public class PokedexImpl implements Pokedex {
      * Inicializa los atributos listaPokemons, contenedor y linkedList.
      */
     public PokedexImpl(){
-        this.listaPokemons= new ListaNodoNexoDoble();
-        this.contenedor= new ArrayList<>();
-        this.linkedList= new LinkedList<>();
 
-
+        this.listaPokemons = new ListaNodoNexoDoble();
+        this.contenedor = new ArrayList<>();
+        this.linkedList = new LinkedList<>();
     }
 
 
@@ -94,15 +93,12 @@ public class PokedexImpl implements Pokedex {
                         listaPokemons.insertar(pokemon);
 
                     }
-
-
-
-
                 }
             }
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+
         }
     }
 
@@ -143,10 +139,41 @@ public class PokedexImpl implements Pokedex {
                     mostrarPokemonesPrimeraEvolucion();
                     break;
                 case "5":
-                    System.out.println("Ingrese el ID del Pokémon: ");
-                    int id = scanner.nextInt();
-                    buscarPokemon(id);
-                    break;
+                {
+                    int dato;
+                    do {
+                        System.out.println("Desea buscar por:");
+                        System.out.println("1.- Id");
+                        System.out.println("2.- Nombre");
+                        System.out.println("3.- salir");
+                        dato = scanner.nextInt();
+
+                        switch (dato){
+                            case 1:
+                                System.out.println("Ingrese el ID del Pokémon: ");
+                                int id = scanner.nextInt();
+                                buscarPokemon(id);
+                                break;
+                            case 2:
+                                //nuevo scanner porque se lleno el buffer
+                                Scanner scanner2 = new Scanner(System.in);
+                                System.out.println("Ingrese el Nombre del Pokémon:");
+                                String nombre = scanner2.nextLine();
+                                buscarPokemonNombre(nombre);
+                                break;
+                            case 3:
+                                System.out.println("Busqueda Personalizada Terminada");
+                                break;
+                            default:
+                                System.out.println("ingrese un dato correcto");
+                                break;
+
+                        }
+
+                    }while (dato!=3);
+                }
+
+
                 case "6":
                     System.out.println("¡Hasta luego!");
                     break;
@@ -156,6 +183,9 @@ public class PokedexImpl implements Pokedex {
             }
         } while (!opcion.equals("6"));
     }
+
+
+
     /**
      * Busca un Pokémon por su ID y muestra su información si se encuentra en la Pokédex.
      * @param id El ID del Pokémon a buscar.
@@ -165,6 +195,19 @@ public class PokedexImpl implements Pokedex {
 
             System.out.println(listaPokemons.obtenerPokemon(id).toString());
         }else{
+            System.out.println("El pokemon no se encuentra en la Pokedex.");
+        }
+
+    }
+    /**
+     * Busca un Pokémon por su nombre y muestra su información si se encuentra en la Pokédex.
+     * @param nombre El ID del Pokémon a buscar.
+     */
+    private void buscarPokemonNombre(String nombre){
+
+        if(listaPokemons.buscarPokemonNombre(nombre)){
+            System.out.println(listaPokemons.obtenerPokemonNombre(nombre).toString());
+        }else {
             System.out.println("El pokemon no se encuentra en la Pokedex.");
         }
 
@@ -213,6 +256,7 @@ public class PokedexImpl implements Pokedex {
         for (NodoNexoDoble nodoNexoDoble : contenedor) {
             System.out.println(nodoNexoDoble.getPokemon().toString());
         }
+
 
     }
 
